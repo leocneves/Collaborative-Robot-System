@@ -13,7 +13,11 @@ cd ~/catkin_ws/src
 And then clone the packages:
 
 ```
-git clone 
+git clone https://github.com/leocneves/Multi-Robot-System
+```
+
+```
+cd ~/catkin_ws && catkin_make
 ```
 
 
@@ -30,4 +34,3 @@ git clone
 * **Dyllan**
 * **Rodrigo de Carvalho Techi**
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
