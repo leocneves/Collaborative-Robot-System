@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="x" default="3.02"/>
+  <arg name="y" default="-19.45"/>
+  <arg name="z" default="0.55"/>
+
+  <arg name="x2" default="5.59"/>
+  <arg name="y2" default="-19.49"/>
+  <arg name="z2" default="0.55"/>
+  <param name="/use_sim_time" value="false"/>
+  <node
+    pkg="gazebo_ros" type="gazebo" name="gazebo"
+    args="$(find multi_robot_task)/worlds/rescue">
+  </node>
+
+  <!-- <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="$(arg headless)"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include> -->
+
+<group ns="pelican">
+  <include file="$(find multi_robot_task)/launch/spawn_quadrotor.launch">
+    <arg name="x" default="$(arg x)"/>
+    <arg name="y" default="$(arg y)"/>
+    <arg name="z" default="$(arg z)"/>
+  </include>
+</group>
+
+
+ <!-- <include file="$(find hector_slam_launch)/launch/tutorial.launch"/> -->
+
+
+ <!-- <arg name="world_name" default="worlds/empty.world"/> -->
+<!-- <group ns="husky"> -->
+ <arg name="laser_enabled" default="$(optenv HUSKY_LASER_ENABLED true)"/>
+ <arg name="ur5_enabled" default="$(optenv HUSKY_UR5_ENABLED false)"/>
+ <arg name="kinect_enabled" default="$(optenv HUSKY_KINECT_ENABLED false)"/>
+
+
+ <include file="$(find multi_robot_task)/launch/spawn_husky.launch">
+   <arg name="x2" default="$(arg x2)"/>
+   <arg name="y2" default="$(arg y2)"/>
+   <arg name="z2" default="$(arg z2)"/>
+   <arg name="laser_enabled" value="$(arg laser_enabled)"/>
+   <arg name="ur5_enabled" value="$(arg ur5_enabled)"/>
+   <arg name="kinect_enabled" value="$(arg kinect_enabled)"/>
+ </include>
+
+<!-- </group> -->
+    <include file="$(find husky_control)/launch/teleop.launch" />
+    <include file="$(find outdoor_waypoint_nav)/launch/include/localization_run_sim.launch"/>
+    <include file="$(find husky_navigation)/launch/gmapping.launch" />
+    <include file="$(find husky_navigation)/launch/move_base.launch" />
+    <include file="$(find outdoor_waypoint_nav)/launch/include/safety_node.launch" />
+
+</launch>
