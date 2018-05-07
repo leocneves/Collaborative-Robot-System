@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <group ns="pelican">
+    <arg name="name" default="quadrotor"/>
+    <arg name="tf_prefix" default="quadrotor_base"/>
+    <!-- <arg name="x" default="4.0"/>
+    <arg name="y" default="0.5"/>
+    <arg name="z" default="0.6"/> -->
+
+    <arg name="x" default="3.02"/>
+    <arg name="y" default="-19.45"/>
+    <arg name="z" default="0.55"/>
+
+    <arg name="use_ground_truth_for_tf" default="true"/>
+    <arg name="use_ground_truth_for_control" default="true"/>
+    <arg name="use_pose_estimation" if="$(arg use_ground_truth_for_control)" default="false"/>
+    <arg name="use_pose_estimation" unless="$(arg use_ground_truth_for_control)" default="true"/>
+
+    <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch">
+      <arg name="name" default="$(arg name)"/>
+      <arg name="model" value="$(find hector_quadrotor_description)/urdf/quadrotor_downward_cam.gazebo.xacro"/>
+      <arg name="tf_prefix" default="$(arg tf_prefix)"/>
+      <arg name="x" default="$(arg x)"/>
+      <arg name="y" default="$(arg y)"/>
+      <arg name="z" default="$(arg z)"/>
+      <arg name="use_ground_truth_for_tf" value="$(arg use_ground_truth_for_tf)"/>
+      <arg name="use_ground_truth_for_control" value="$(arg use_ground_truth_for_control)"/>
+      <arg name="use_pose_estimation" value="$(arg use_pose_estimation)"/>
+    </include>
+  </group>
+
+
+
+
+
+  <!-- Run gazebo to simulate robot -->
+    <include file="$(find outdoor_waypoint_nav)/launch/include/gazebo.launch"/>
+
+  <!-- Run teleop.launch to control sim with Joystick -->
+		<include file="$(find husky_control)/launch/teleop.launch" />
+
+  <!-- Run gmapping to create map -->
+    <include file="$(find husky_navigation)/launch/gmapping.launch" />
+
+  <!-- Launch hector_slam for laser odometry and mapping -->
+    <include file="$(find hector_mapping_nav)/launch/scanmatch_nav.launch" />
+
+  <!-- Launch robot_localization and navsat node-->
+    <include file="$(find outdoor_waypoint_nav)/launch/include/localization_run_sim.launch"/>
+
+  <!-- Run rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find outdoor_waypoint_nav)/rviz_config/model.rviz" />
+
+  <!-- Run husky_navigation to start move_base -->
+    <include file="$(find husky_navigation)/launch/move_base_nav.launch" />
+
+  <!-- launch safety node to allow the user to disable velocity commands to the robot -->
+  <include file="$(find outdoor_waypoint_nav)/launch/include/safety_node.launch" />
+
+</launch>

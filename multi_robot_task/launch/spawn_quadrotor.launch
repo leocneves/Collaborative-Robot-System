@@ -2,7 +2,7 @@
 
 <launch>
   <arg name="name" default="pelican"/>
-  <arg name="model" default="$(find pelican_description)/urdf/pelican.gazebo.xacro"/>
+  <arg name="model" default="$(find multi_robot_task)/urdf/quadrotor_sensors.gazebo.xacro"/>
   <arg name="controllers" default="
     controller/position
     controller/velocity
@@ -20,11 +20,12 @@
   <arg name="use_pose_estimation" unless="$(arg use_ground_truth_for_control)" default="true"/>
 
   <arg name="world_frame" default="world"/> <!-- This should actually be "/world". See https://github.com/ros-simulation/gazebo_ros_pkgs/pull/324 -->
+
   <arg name="base_link_frame" default="$(arg tf_prefix)/base_link"/>
 
   <!-- send the robot XML to param server -->
-  <param name="robot_description" command="$(find xacro)/xacro '$(arg model)' base_link_frame:=$(arg base_link_frame) world_frame:=$(arg world_frame)" />
-  <param name="tf_prefix" type="string" value="$(arg tf_prefix)"/> <!-- required for hector_pose_estimation and message_to_tf -->
+  <!-- <param name="robot_description" command="$(find xacro)/xacro '$(arg model)' base_link_frame:=$(arg base_link_frame) world_frame:=$(arg world_frame)" /> -->
+  <!-- <param name="tf_prefix" type="string" value="$(arg tf_prefix)"/> -->
   <param name="base_link_frame" type="string" value="$(arg base_link_frame)" />
   <param name="base_stabilized_frame" type="string" value="$(arg tf_prefix)/base_stabilized" />
   <param name="base_footprint_frame" type="string" value="$(arg tf_prefix)/base_footprint" />
