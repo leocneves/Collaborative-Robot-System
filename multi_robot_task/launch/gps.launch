@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <node name="nmea_serial_driver" pkg="nmea_navsat_driver" type="nmea_serial_driver">
+    <param name="port" value="/dev/ttyACM0" />
+    <param name="baud" value="115200" />
+    <remap from="fix" to="navsat/fix"/>
+  </node>
+</launch>
